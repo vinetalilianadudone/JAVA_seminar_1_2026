@@ -2,7 +2,7 @@ package javasem01;
 
 import java.util.*;
 
-/* Lai izpildītu uzdevumus tikai izmantota informācija no vietnēm:
+/* Lai izpildītu uzdevumus tika izmantota informācija no vietnēm:
  * https://www.geeksforgeeks.org/java/java/
  * https://docs.oracle.com/javase/tutorial/collections/interfaces/set.html
  * https://www.baeldung.com/java-set-operations
