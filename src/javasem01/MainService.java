@@ -72,6 +72,18 @@ public class MainService {
             System.out.println("Coin flip (1000): " + Arrays.toString(coinFlip(1000)));
             System.out.println("Dice roll (1000): " + Arrays.toString(rollDice(1000)));
             System.out.println("Roll 2 dices until double 6: " + roll2Dices());
+            
+            // ===== 6. uzdevums =====
+            System.out.println("\n6. uzdevums");
+            
+            byte[] bytes = {
+                72, 101, 108, 108, 111, 33, 32, 77, 121, 32, 
+                115, 107, 105, 108, 108, 115, 32, 97, 114, 101, 
+                32, 103, 114, 101, 97, 116, 32, 97, 108, 114, 
+                101, 97, 100, 121, 33
+            };
+            
+            System.out.println(getTextFromBytes(bytes));
 
         } catch (Exception e) {
             System.err.println("Error: " + e.getMessage());
@@ -297,5 +309,15 @@ public class MainService {
         }
         
         return tries;
+    }
+    
+    // 6. uzdevums - baiti uz tekstu
+    
+    private static String getTextFromBytes(byte[] array) throws Exception {
+        if (array == null) {
+            throw new Exception("Byte array is null.");
+        }
+        
+        return new String(array);
     }
 }
