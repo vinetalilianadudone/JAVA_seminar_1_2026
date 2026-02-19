@@ -85,6 +85,11 @@ public class MainService {
             
             System.out.println(getTextFromBytes(bytes));
 
+            // ===== 7. uzdevums =====
+            System.out.println("\n7. uzdevums");
+            
+            System.out.println(pascalsTriangle(6));
+            
         } catch (Exception e) {
             System.err.println("Error: " + e.getMessage());
         }
@@ -319,5 +324,22 @@ public class MainService {
         }
         
         return new String(array);
+    }
+    
+    // 7. uzdevums - Pascala trijstūris
+    
+    private static String pascalsTriangle(int level) throws Exception {
+        if (level < 0) {
+            throw new Exception("Level cannot be negative.");
+        }
+        
+        int[] row = new int[level + 1];
+        
+        for (int i = 0; i <= level; i++) {
+            row[i] = factorialForLoop(level) 
+                / (factorialForLoop(i) * factorialForLoop(level - i));
+        }
+        
+        return Arrays.toString(row);
     }
 }
