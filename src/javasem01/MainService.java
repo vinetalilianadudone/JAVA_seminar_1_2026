@@ -2,6 +2,13 @@ package javasem01;
 
 import java.util.*;
 
+/* Lai izpildītu uzdevumus tikai izmantota informācija no vietnēm:
+ * https://www.geeksforgeeks.org/java/java/
+ * https://docs.oracle.com/javase/tutorial/collections/interfaces/set.html
+ * https://www.baeldung.com/java-set-operations
+ * https://csweb.wooster.edu/kbhowmik/cs110/week09/lecture01/roll_dice.html
+ */
+
 public class MainService {
     
     private static final float GRAVITY = 9.80665f;
@@ -72,6 +79,7 @@ public class MainService {
             System.out.println("Coin flip (1000): " + Arrays.toString(coinFlip(1000)));
             System.out.println("Dice roll (1000): " + Arrays.toString(rollDice(1000)));
             System.out.println("Roll 2 dices until double 6: " + roll2Dices());
+
             
             // ===== 6. uzdevums =====
             System.out.println("\n6. uzdevums");
@@ -85,11 +93,24 @@ public class MainService {
             
             System.out.println(getTextFromBytes(bytes));
 
+            
             // ===== 7. uzdevums =====
             System.out.println("\n7. uzdevums");
             
             System.out.println(pascalsTriangle(6));
+
             
+            // ===== 8. uzdevums =====
+            System.out.println("\n8. uzdevums");
+            
+            System.out.println(executeStringEquation("1 - 3 * 18 / 4 + 2"));
+
+            
+            // ===== 9. uzdevums =====
+            System.out.println("\n9. uzdevums");
+            
+            System.out.println(setOperations("[1,2,3] + [3,5,7]"));
+
         } catch (Exception e) {
             System.err.println("Error: " + e.getMessage());
         }
@@ -315,6 +336,7 @@ public class MainService {
         
         return tries;
     }
+
     
     // 6. uzdevums - baiti uz tekstu
     
@@ -325,6 +347,7 @@ public class MainService {
         
         return new String(array);
     }
+
     
     // 7. uzdevums - Pascala trijstūris
     
@@ -341,5 +364,135 @@ public class MainService {
         }
         
         return Arrays.toString(row);
+    }
+
+    
+    // 8. uzdevums - string izteiksmes
+
+    private static double executeStringEquation(String input) throws Exception {
+        if (input == null || input.trim().isEmpty()) {
+            throw new Exception("Input is empty");
+        }
+        
+        // Noņem atstarpes
+        String expr = input.replaceAll("\\s+", "");
+        
+        List<Double> numbers = new ArrayList<>();
+        List<Character> ops = new ArrayList<>();
+        
+        StringBuilder currentNum = new StringBuilder();
+        int i = 0;
+        
+        while (i < expr.length()) {
+            char c = expr.charAt(i);
+            
+            if (c == '+' || c == '-') {
+                // Saglabā iepriekšējo skaitli
+                numbers.add(Double.parseDouble(currentNum.toString()));
+                currentNum = new StringBuilder();
+                ops.add(c);
+                i++;
+            }
+            else if (c == '*' || c == '/') {
+                // Atrod nākamo skaitli (lai izpildītu * vai / uzreiz)
+                int j = i + 1;
+                StringBuilder nextNum = new StringBuilder();
+                while (j < expr.length() && (Character.isDigit(expr.charAt(j)) || expr.charAt(j) == '.')) {
+                    nextNum.append(expr.charAt(j));
+                    j++;
+                }
+                
+                double left = Double.parseDouble(currentNum.toString());
+                double right = Double.parseDouble(nextNum.toString());
+                
+                // Izpilda * vai / uzreiz
+                if (c == '*') {
+                    currentNum = new StringBuilder(String.valueOf(left * right));
+                } else {
+                    if (right == 0) throw new Exception("Division by zero");
+                    currentNum = new StringBuilder(String.valueOf(left / right));
+                }
+                i = j;
+            }
+            else {
+                // Cipars vai punkts
+                currentNum.append(c);
+                i++;
+            }
+        }
+        
+        // Pēdējais skaitlis
+        numbers.add(Double.parseDouble(currentNum.toString()));
+        
+        double result = numbers.get(0);
+        for (int k = 0; k < ops.size(); k++) {
+            if (ops.get(k) == '+') {
+                result += numbers.get(k + 1);
+            } else {
+                result -= numbers.get(k + 1);
+            }
+        }
+        
+        return result;
+    }
+
+    
+    // 9. uzdevums - kopu operācijas
+    
+    private static String setOperations(String input) throws Exception {
+        if (input == null || input.isEmpty()) {
+            throw new Exception("Input string is empty.");
+        }
+        
+        String operator = input.contains("+") ? "+" 
+            : input.contains("*") ? "*" 
+            : "-";
+            
+        String[] parts = input.split("[+\\-*]");
+        
+        Set<Integer> set1 = parseSet(parts[0]);
+        Set<Integer> set2 = parseSet(parts[1]);
+        Set<Integer> result = new TreeSet<>();
+        
+        switch (operator) {
+            case "+":
+                result.addAll(set1);
+                result.addAll(set2);
+                break;
+                
+            case "*":
+                for (int n : set1) {
+                    if (set2.contains(n)) {
+                        result.add(n);
+                    }
+                }
+                break;
+                
+            case "-":
+                result.addAll(set1);
+                result.addAll(set2);
+                
+                Set<Integer> inter = new HashSet<>(set1);
+                inter.retainAll(set2);
+                result.removeAll(inter);
+                break;
+        }
+        
+        return result.toString();
+    }
+
+    private static Set<Integer> parseSet(String s) {
+        s = s.replaceAll("[\\[\\]\\s]", "");
+        String[] nums = s.split(",");
+        
+        Set<Integer> set = new HashSet<>();
+        
+        for (String num : nums) {
+            if (!num.isEmpty()) {
+                set.add(Integer.parseInt(num));
+            }
+        }
+        
+        return set;
     }
 }
